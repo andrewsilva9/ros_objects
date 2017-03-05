@@ -74,13 +74,33 @@ class ObjectDetector(object):
             return
 
         self.objects = self.object_detector.find_objects(image_cv)
+        #### DEBUG ####
+        if self.debug:
+            for obj in self.objects:
+                x1 = int(obj[0])
+                y1 = int(obj[1])
+                width = int(obj[2])
+                height = int(obj[3])
+                image_cv = self._draw_bb(image_cv, {'x': x1,
+                                                    'y': y1,
+                                                    'w': width,
+                                                    'h': height}, (0, 255, 0))
+            try:
+                image_msg = self.bridge.cv2_to_imgmsg(image_cv, "bgr8")
+            except CvBridgeError as e:
+                print e
+
+            image_msg.header = header
+            self.image_pub.publish(image_msg)
+        #### END DEBUG ####
+
         # Instantiate detections object
         obj_arr = Detections()
         obj_arr.header = header
         # For each object / keypoint set found in the image:
         for bbox_obj in self.objects:
             msg = Object()
-            msg.object_id = bbox_obj[4]
+            msg.object_id = '15'
             msg.top_left_x = int(bbox_obj[0])
             msg.top_left_y = int(bbox_obj[1])
             msg.bot_right_x = int(bbox_obj[2])
