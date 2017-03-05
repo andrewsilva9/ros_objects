@@ -9,7 +9,7 @@ import cv2
 import rospy
 from cv_bridge import CvBridge, CvBridgeError
 from sensor_msgs.msg import Image
-from rail_object_detector.msg import Object, Detections
+from ros_objects.msg import Object, Detections
 
 import object_detector
 
@@ -41,7 +41,7 @@ class ObjectDetector(object):
         self.image_datastream = None
         self.input_image = None
         self.bridge = CvBridge()
-        self.object_detector = object_detector.ObjectDetector()
+        # self.object_detector = object_detector.ObjectDetector()
         self.debug = rospy.get_param('~debug', default=False)
         self.image_sub_topic_name = rospy.get_param('~image_sub_topic_name', default='/kinect/qhd/image_color_rect')
 
@@ -73,7 +73,7 @@ class ObjectDetector(object):
             print e
             return
 
-        self.objects = self.object_detector.find_objects(image_cv)
+        self.objects = object_detector.find_objects(image_cv)
         #### DEBUG ####
         if self.debug:
             for obj in self.objects:
@@ -100,7 +100,7 @@ class ObjectDetector(object):
         # For each object / keypoint set found in the image:
         for bbox_obj in self.objects:
             msg = Object()
-            msg.object_id = '15'
+            msg.object_id = 15
             msg.top_left_x = int(bbox_obj[0])
             msg.top_left_y = int(bbox_obj[1])
             msg.bot_right_x = int(bbox_obj[2])

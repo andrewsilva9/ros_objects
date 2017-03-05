@@ -1,5 +1,5 @@
 <package>
-  <name>rail_object_detector</name>
+  <name>ros_objects</name>
   <version>0.0.1</version>
   <description>
     This package provides object detection via Faster RCNN.
