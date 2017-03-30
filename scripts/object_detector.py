@@ -9,7 +9,9 @@ def find_objects(input_image):
     """
     # Only want bottom half of the image
     down_shift = len(input_image) / 2
-    img = input_image[down_shift:, :, :]
+    left_shift = 65
+    end_shift = 905
+    img = input_image[down_shift:, left_shift:end_shift, :]
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
     # Threshold and only allow super white through (table)
@@ -29,7 +31,7 @@ def find_objects(input_image):
         if area > tablet_size:
             if np.sum(img[con[1] + inward_scale:con[1] + con[3] - inward_scale,
                       con[0] + inward_scale:con[0] + con[2] - inward_scale, :]) < mostly_black:
-                appender = [con[0], con[1] + down_shift, con[2], con[3], tablet_id]
+                appender = [con[0] + left_shift, con[1] + down_shift, con[2], con[3], tablet_id]
                 final_cons.append(appender)
         # If box is too small, ignore it
         elif area < 100:
@@ -39,6 +41,6 @@ def find_objects(input_image):
             continue
         # Else it's a block
         else:
-            appender = [con[0], con[1] + down_shift, con[2], con[3], block_id]
+            appender = [con[0] + left_shift, con[1] + down_shift, con[2], con[3], block_id]
             final_cons.append(appender)
     return final_cons
